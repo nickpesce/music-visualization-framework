@@ -1,16 +1,17 @@
-import music_decorators
-import music_input
 from collections import defaultdict
+from . import music_input
+from . import music_decorators
+
 
 NUM_INPUT_BANDS= 14
 
 class Analyzer:
-    def __init__(self, port, stereo):
+    def __init__(self, port, stereo=False, smoothing=.6, threshold_acceleration=.02, beat_cooldown=3):
         self.stereo = stereo
         self.num_bands = 14 if self.stereo else 7
-        self.smoothing = .6
-        self.threshold_acceleration = .02
-        self.beat_cooldown = 3
+        self.smoothing = smoothing
+        self.threshold_acceleration = threshold_acceleration
+        self.beat_cooldown = beat_cooldown
         self.beat_listeners = defaultdict(list)
         self.level_change_listeners = []
         self.threshold_change_listeners = []
