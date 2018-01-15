@@ -10,8 +10,8 @@ class Input:
     def receive_input(self, func):
         self.listener = func
 
-    def start_listening(self):
-        while self.ser.isOpen():
+    def start_listening(self, stop_event=None):
+        while self.ser.isOpen() and ((stop_event is None) or (not stop_event.is_set())):
             byte_line = self.ser.readline()
             try:
                 line = np.array(byte_line.decode().strip().split('|')).astype(int)

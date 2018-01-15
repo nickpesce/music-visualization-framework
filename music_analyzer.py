@@ -31,8 +31,8 @@ class Analyzer:
         self.input = music_input.Input(port)
         self.input.receive_input(self.process_raw_line)
 
-    def start(self):
-        self.input.start_listening()
+    def start(self, stop_event=None):
+        self.input.start_listening(stop_event)
             
     def process_raw_line(self, line):
         if len(line) < NUM_INPUT_BANDS:
