@@ -1,4 +1,6 @@
 from collections import defaultdict
+import threading
+
 from . import music_input
 from . import music_decorators
 
@@ -22,7 +24,9 @@ class Analyzer:
         self.beats = [False]*self.num_bands
         self.time_since_last_beat = [0]*self.num_bands
 
+        self.total_volume = 0
         self.total_volume_threshold = 0
+        self.total_beat_listeners = []
         self.total_volume_beat = False
         self.prev_total_volume_threshold = 0
         self.time_since_last_total_volume_beat = 0
@@ -31,8 +35,11 @@ class Analyzer:
         self.input = music_input.Input(port)
         self.input.receive_input(self.process_raw_line)
 
-    def start(self, stop_event=None):
-        self.input.start_listening(stop_event)
+    def start(self, threaded=True, stop_event=None):
+        if threaded:
+            threading.Thread(target=self.input.start_listening, args=(stop_event,)).start()
+        else:
+            self.input.start_listening(stop_event)
             
     def process_raw_line(self, line):
         if len(line) < NUM_INPUT_BANDS:
@@ -59,6 +66,8 @@ class Analyzer:
             if self.time_since_last_total_volume_beat > self.beat_cooldown:
                 self.total_volume_beat = True
                 self.time_since_last_total_volume_beat = 0
+                for l in self.total_beat_listeners:
+                    l()
             self.total_volume_threshold = self.total_volume
 
         else:

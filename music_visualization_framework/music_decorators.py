@@ -7,6 +7,11 @@ class Decorators:
         def decorator(func):
             self.music_app.beat_listeners[beat_type].append(func)
         return decorator
+    
+    def on_total_level_beat(self, beat_type):
+        def decorator(func):
+            self.music_app.total_beat_listeners.append(func)
+        return decorator
 
     def on_level_change(self):
         def decorator(func):
