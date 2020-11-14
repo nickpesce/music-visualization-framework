@@ -9,9 +9,9 @@ setuptools.setup(
     description="Music Visualization Framework",
     url=["https://github.com/nickpesce/music-visualization-framework"],
     packages=["music_visualization_framework"],
-    scripts=["bin/musicd"],
     entry_points={
         "console_scripts": ["musicd=music_visualization_framework.musicd:start"],
     },
+    install_requires=["numpy", "pyserial"],
     classifiers=["License :: MIT License", "Operating System :: Linux",],
 )
